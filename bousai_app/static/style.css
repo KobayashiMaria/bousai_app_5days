@@ -1,0 +1,288 @@
+:root {
+  --blue: #2d5bad;
+  --blue-dark: #25519d;
+  --green: #22a34a;
+  --text: #3e5068;
+  --muted: #66778d;
+  --surface: #ffffff;
+  --panel: #f5f6f8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: #fbfcfe;
+  font-family: "Noto Sans JP", "Yu Gothic", sans-serif;
+}
+
+.site-header {
+  position: relative;
+  z-index: 1000;
+  color: #fff;
+  background: linear-gradient(110deg, #2f5faf 0%, var(--blue-dark) 100%);
+  box-shadow: 0 2px 7px rgba(40, 76, 130, 0.14);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100% - 48px, 1380px);
+  height: 70px;
+  margin: 0 auto;
+}
+
+.brand {
+  color: #fff;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-decoration: none;
+}
+
+.menu-toggle {
+  padding: 4px 8px;
+  border: 0;
+  color: #fff;
+  background: transparent;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.site-nav {
+  display: none;
+  position: absolute;
+  top: 70px;
+  right: 24px;
+  min-width: 210px;
+  padding: 8px;
+  border-radius: 0 0 8px 8px;
+  background: var(--blue-dark);
+  box-shadow: 0 8px 18px rgba(22, 48, 91, .18);
+}
+
+.site-nav.is-open {
+  display: grid;
+}
+
+.site-nav a {
+  padding: 11px 14px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  background: rgba(255, 255, 255, .13);
+}
+
+main {
+  width: min(100% - 32px, 920px);
+  margin: 32px auto 84px;
+}
+
+.home-layout {
+  display: grid;
+  gap: 36px;
+}
+
+.content-card {
+  padding: 28px;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 4px 22px rgba(64, 93, 129, .09);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin: 0 0 22px;
+  color: var(--blue);
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.title-icon {
+  flex: 0 0 auto;
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
+  fill: var(--blue);
+  stroke: var(--blue);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+  color: var(--blue);
+}
+
+.pin-icon circle {
+  fill: #fff;
+  stroke: none;
+}
+
+.weather-icon {
+  width: 31px;
+  stroke-width: 1.7;
+}
+
+.shelter-map {
+  height: 365px;
+  overflow: hidden;
+  border-radius: 11px;
+}
+
+.weather-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.weather-heading .section-title {
+  margin-bottom: 20px;
+}
+
+.refresh-label {
+  margin: 0 0 20px;
+  color: var(--green);
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.refresh-label span {
+  font-size: 25px;
+  vertical-align: -2px;
+}
+
+.refresh-label svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+  vertical-align: -5px;
+}
+
+.weather-panel {
+  min-height: 150px;
+  padding: 20px 18px 14px;
+  border-radius: 11px;
+  background: var(--panel);
+}
+
+.weather-panel p {
+  margin: 0 0 13px;
+}
+
+.weather-location {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.weather-location svg {
+  width: 18px;
+  height: 21px;
+  fill: var(--muted);
+  stroke: var(--muted);
+  stroke-width: 1.5;
+}
+
+.safe-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.safe-message svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--green);
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.weather-time {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.weather-time svg {
+  flex: 0 0 auto;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.warning-list {
+  margin: 0 0 13px;
+  padding-left: 20px;
+  color: #c24d42;
+  font-weight: 700;
+}
+
+.loading-message,
+.weather-error {
+  color: var(--muted);
+}
+
+@media (max-width: 640px) {
+  .header-inner {
+    width: min(100% - 28px, 1380px);
+    height: 62px;
+  }
+
+  .site-nav {
+    top: 62px;
+    right: 14px;
+  }
+
+  main {
+    width: min(100% - 24px, 920px);
+    margin-top: 20px;
+  }
+
+  .content-card {
+    padding: 20px 16px;
+    border-radius: 13px;
+  }
+
+  .section-title {
+    font-size: 21px;
+  }
+
+  .weather-heading {
+    display: block;
+  }
+
+  .refresh-label {
+    margin: -10px 0 17px;
+  }
+
+  .shelter-map {
+    height: 300px;
+  }
+}
