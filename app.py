@@ -144,6 +144,45 @@ def filter_shelters(district=None):
     return [s for s in shelters if not district or s.get('district') == district]
 
 
+def search_shelters(name='', concerns=None, latitude=None, longitude=None):
+    """検索条件に一致する避難所を返す。位置情報があれば距離順にする。"""
+    name = (name or '').strip().lower()
+    concerns = concerns or []
+    results = []
+
+    for shelter in shelters:
+        shelter_name = str(shelter.get('name', '')).lower()
+        if name and name not in shelter_name:
+            continue
+
+        supported = shelter.get('features', shelter.get('considerations', []))
+        if isinstance(supported, str):
+            supported = [supported]
+        if concerns and not all(concern in supported for concern in concerns):
+            continue
+
+        results.append(shelter.copy())
+
+    if latitude is not None and longitude is not None:
+        try:
+            latitude = float(latitude)
+            longitude = float(longitude)
+        except (TypeError, ValueError):
+            return results
+
+        def distance(shelter):
+            shelter_lat = shelter.get('latitude')
+            shelter_lon = shelter.get('longitude')
+            if shelter_lat is None or shelter_lon is None:
+                return float('inf')
+            return ((float(shelter_lat) - latitude) ** 2
+                    + (float(shelter_lon) - longitude) ** 2) ** 0.5
+
+        results.sort(key=distance)
+
+    return results
+
+
 def parse_area_warnings(warning_data):
     """気象庁の新形式JSONから対象市区町村の発表・継続中の情報を抽出する"""
     if not isinstance(warning_data, list):
@@ -340,8 +379,20 @@ def board():
 # 検索結果ページ：templates/search_results.html を返す
 @app.route('/search_results')
 def search_results():
-    results = filter_shelters(request.args.get('district'))
-    return render_template('search_results.html', results=results)
+    concerns = request.args.getlist('concern')
+    results = search_shelters(
+        name=request.args.get('name', ''),
+        concerns=concerns,
+        latitude=request.args.get('latitude'),
+        longitude=request.args.get('longitude')
+    )
+    return render_template(
+        'search_results.html',
+        results=results,
+        search_name=request.args.get('name', ''),
+        search_concerns=concerns,
+        nearest=bool(request.args.get('latitude') and request.args.get('longitude'))
+    )
 
 # JSON API：/shelters?district=地区名
 @app.route('/shelters', methods=['GET'])
@@ -362,4 +413,5 @@ def api_weather_warnings():
     return jsonify(get_weather_warnings())
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 5001))
+    app.run(host='0.0.0.0', port=port, debug=True)

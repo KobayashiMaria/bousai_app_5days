@@ -1,8 +1,70 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>避難所検索</h2>
-<p>登録されている避難所を確認できます。</p>
+<section class="search-page" aria-labelledby="shelter-search-title">
+	<h1 id="shelter-search-title">避難所検索</h1>
 
-<p><a href="/all_shelters">全施設一覧</a></p>
+	<section class="search-section" aria-labelledby="simple-search-title">
+		<h2 id="simple-search-title">簡易検索</h2>
+		<form id="nearest-search-form" class="simple-search-form" action="{{ url_for('search_results') }}" method="get">
+			<input type="hidden" name="latitude" id="latitude">
+			<input type="hidden" name="longitude" id="longitude">
+			<button class="search-button simple-search-button" type="submit">最寄りの避難所を検索する</button>
+		</form>
+		<p id="location-message" class="form-message" role="status"></p>
+	</section>
+
+	<section class="search-section detailed-search" aria-labelledby="detailed-search-title">
+		<h2 id="detailed-search-title">詳細検索</h2>
+		<form action="{{ url_for('search_results') }}" method="get">
+			<div class="form-row">
+				<label for="shelter-name">避難所名：</label>
+				<input id="shelter-name" name="name" type="search" placeholder="自由入力">
+			</div>
+
+			<fieldset class="form-group departure-group">
+				<legend>出発地点：</legend>
+				<label><input type="radio" name="departure" value="none" checked> 指定しない</label>
+				<label><input type="radio" name="departure" value="current"> 現在地</label>
+				<label><input type="radio" name="departure" value="home"> 自宅</label>
+			</fieldset>
+
+			<fieldset class="form-group consideration-group">
+				<legend>配慮事項：</legend>
+				<label><input type="checkbox" name="concern" value="高齢者（65歳以上）"> 高齢者（65歳以上）</label>
+				<label><input type="checkbox" name="concern" value="子供連れ"> 子供連れ</label>
+				<label><input type="checkbox" name="concern" value="障害者・要介護者"> 障害者・要介護者</label>
+				<label><input type="checkbox" name="concern" value="外国人"> 外国人</label>
+				<label><input type="checkbox" name="concern" value="ペット"> ペット</label>
+			</fieldset>
+
+			<button class="search-button detail-search-button" type="submit">検索</button>
+		</form>
+	</section>
+
+	<p class="all-shelters-link"><a href="{{ url_for('all_shelters') }}">登録されている避難所をすべて見る</a></p>
+</section>
+
+<script>
+	document.getElementById('nearest-search-form').addEventListener('submit', function(event) {
+		const message = document.getElementById('location-message');
+		if (!navigator.geolocation) {
+			message.textContent = 'このブラウザでは現在地を取得できません。';
+			event.preventDefault();
+			return;
+		}
+
+		if (!document.getElementById('latitude').value) {
+			event.preventDefault();
+			message.textContent = '現在地を確認しています...';
+			navigator.geolocation.getCurrentPosition(function(position) {
+				document.getElementById('latitude').value = position.coords.latitude;
+				document.getElementById('longitude').value = position.coords.longitude;
+				document.getElementById('nearest-search-form').submit();
+			}, function() {
+				message.textContent = '現在地を取得できませんでした。位置情報を許可してください。';
+			});
+		}
+	});
+</script>
 {% endblock %}

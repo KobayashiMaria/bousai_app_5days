@@ -1,20 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>検索結果</h2>
+<section class="results-page">
+<div class="results-heading">
+  <div>
+    <p class="eyebrow">SEARCH RESULT</p>
+    <h1>{% if nearest %}最寄りの避難所{% else %}検索結果{% endif %}</h1>
+  </div>
+  <a class="back-link" href="{{ url_for('shelter_search') }}">検索条件を変更</a>
+</div>
 
 {% if results %}
-  <ul>
+  <p class="result-count">{{ results|length }}件の避難所が見つかりました。</p>
+  <ul class="shelter-results">
     {% for shelter in results %}
-    <li>{{ shelter.name }}</li>
+    <li><strong>{{ shelter.name }}</strong>{% if shelter.address %}<span>{{ shelter.address }}</span>{% endif %}</li>
     {% endfor %}
   </ul>
 {% else %}
-  <p>該当する避難所が見つかりませんでした</p>
+  <p class="empty-results">条件に一致する避難所が見つかりませんでした。</p>
 {% endif %}
 
-<p>
-  <a href="/shelter_search">検索画面に戻る</a> |
-  <a href="/">トップページへ戻る</a>
-</p>
+<p class="results-footer"><a href="{{ url_for('shelter_search') }}">検索画面に戻る</a><a href="{{ url_for('index') }}">トップページへ戻る</a></p>
+</section>
 {% endblock %}
